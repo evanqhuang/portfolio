@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const { title, description, tech, category, github, url } = project.data;
+const { title, description, tech, category, github, url, image } = project.data;
 const { Content } = await render(project);
 ---
 
@@ -61,6 +61,18 @@ const { Content } = await render(project);
           </a>
         )}
       </div>
+
+      {image && (
+        <div class="mb-10 rounded-sm overflow-hidden border border-[var(--surface-border)]">
+          <img
+            src={image}
+            alt={`${title} screenshot`}
+            class="w-full aspect-video object-cover object-top"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      )}
 
       <!-- Rendered markdown body -->
       <div class="prose">

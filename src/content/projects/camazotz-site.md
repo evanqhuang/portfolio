@@ -6,7 +6,8 @@ category: web
 github: "https://github.com/evanqhuang/camazotz-site"
 url: "https://camazotzdiving.com"
 featured: true
-order: 8
+order: 4
+image: "/images/projects/camazotz-site.png"
 ---
 
 Camazotz Diving sells custom 3D-printed equipment designed for underwater cave survey and exploration. The site needed to handle product browsing, 3D model preview, checkout, and a blog — all with zero cold starts and global edge latency.

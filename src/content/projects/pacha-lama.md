@@ -5,7 +5,7 @@ tech: ["Python", "LSTM", "ARIMA", "TimescaleDB", "Binance API", "Docker", "Grafa
 category: finance
 github: "https://github.com/evanqhuang/pacha-lama"
 featured: true
-order: 4
+order: 7
 ---
 
 LAMA stands for Liquidity-Anomaly-Momentum-Analysis. The signal is a weighted composite: on-chain liquidity depth analysis contributes 40%, ARIMA-based momentum detection contributes 30%, and an LSTM anomaly detector trained on order book microstructure contributes the remaining 30%.

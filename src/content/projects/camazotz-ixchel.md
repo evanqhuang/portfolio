@@ -6,6 +6,7 @@ category: embedded
 github: "https://github.com/evanqhuang/camazotz-ixchel"
 featured: true
 order: 1
+image: "/images/projects/camazotz-ixchel.png"
 ---
 
 Ixchel is the firmware powering a custom handheld device built for underwater cave survey. The RP2350's dual-core design maps cleanly onto the two real-time demands of the system: core 0 runs a continuous render loop that maintains and draws a 3D stick map of the survey passage, while core 1 runs the 100Hz navigation loop responsible for sensor fusion and state estimation.

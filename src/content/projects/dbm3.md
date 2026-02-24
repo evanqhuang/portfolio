@@ -5,7 +5,8 @@ tech: ["TypeScript", "Python", "Cloudflare Workers", "Numerical Methods"]
 category: research
 github: "https://github.com/evanqhuang/dbm3"
 featured: false
-order: 7
+order: 8
+image: "/images/projects/dbm3.png"
 ---
 
 Most recreational dive computers use the Buhlmann ZH-L16C perfusion model, which treats inert gas uptake as a series of independent exponential compartments. Hempleman's slab diffusion model takes a different physical view: tissue is modeled as a finite slab through which gas diffuses according to Fick's Second Law, giving a more accurate picture of how saturation gradients develop within tissue.

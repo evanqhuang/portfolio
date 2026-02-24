@@ -6,6 +6,7 @@ category: embedded
 github: "https://github.com/evanqhuang/maxwells-razor"
 featured: true
 order: 2
+image: "/images/projects/maxwells-razor.png"
 ---
 
 Maxwell's Razor applies the principle of Maxwell kinematic coupling to the toolchanger problem. A kinematic coupling constrains all six degrees of freedom using exactly six contact points, giving repeatable, deterministic positioning without any active alignment mechanism.
