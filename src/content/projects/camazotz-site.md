@@ -5,7 +5,7 @@ tech: ["Astro", "Tailwind CSS", "Cloudflare Workers", "D1", "Stripe", "Terraform
 category: web
 github: "https://github.com/evanqhuang/camazotz-site"
 url: "https://camazotzdiving.com"
-featured: false
+featured: true
 order: 8
 ---
 

@@ -4,7 +4,7 @@ description: "Diffusion Barrier Matrix decompression modeling framework implemen
 tech: ["TypeScript", "Python", "Cloudflare Workers", "Numerical Methods"]
 category: research
 github: "https://github.com/evanqhuang/dbm3"
-featured: true
+featured: false
 order: 7
 ---
 

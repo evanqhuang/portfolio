@@ -1,6 +1,7 @@
 ---
 interface Props {
   project: {
+    id: string;
     data: {
       title: string;
       description: string;
@@ -16,10 +17,10 @@ interface Props {
 
 const { project } = Astro.props;
 const { title, description, tech, category, github, url, featured } = project.data;
-const cardLink = url || github || null;
+const cardLink = `/projects/${project.id}`;
 ---
 
-<article class={`card card-hover rounded-sm p-5 sm:p-6 flex flex-col h-full group relative ${cardLink ? 'cursor-pointer' : ''}`}>
+<article class="card card-hover rounded-sm p-5 sm:p-6 flex flex-col h-full group relative cursor-pointer">
   <!-- Featured indicator -->
   {featured && (
     <div class="absolute top-0 right-0 w-0 h-0 border-t-[24px] border-t-ember-500/80 border-l-[24px] border-l-transparent"></div>
@@ -29,9 +30,7 @@ const cardLink = url || github || null;
   <div class="mb-3">
     <span class="mono-label text-[10px]">{category}</span>
     <h3 class="text-lg font-heading font-semibold text-ash-100 mt-1 group-hover:text-ember-400 transition-colors">
-      {cardLink ? (
-        <a href={cardLink} target="_blank" rel="noopener noreferrer" class="stretched-link">{title}</a>
-      ) : title}
+      <a href={cardLink} class="stretched-link">{title}</a>
     </h3>
   </div>
 

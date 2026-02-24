@@ -179,6 +179,42 @@ html, body {
     background-size: 24px 24px;
   }
 
+  /* Prose - markdown body content */
+  .prose {
+    @apply text-ash-300 leading-relaxed;
+  }
+  .prose p {
+    @apply mb-4;
+  }
+  .prose p:last-child {
+    @apply mb-0;
+  }
+  .prose h2, .prose h3 {
+    @apply font-heading font-semibold text-ash-100 mt-8 mb-3;
+  }
+  .prose h2 { @apply text-xl; }
+  .prose h3 { @apply text-lg; }
+  .prose a {
+    @apply text-ember-400 hover:text-ember-300 underline underline-offset-2 transition-colors;
+  }
+  .prose ul, .prose ol {
+    @apply mb-4 pl-6;
+  }
+  .prose li {
+    @apply mb-1;
+  }
+  .prose ul li { list-style-type: disc; }
+  .prose ol li { list-style-type: decimal; }
+  .prose code {
+    @apply font-mono text-sm px-1.5 py-0.5 rounded bg-void-800 text-ember-300;
+  }
+  .prose pre {
+    @apply mb-4 p-4 rounded bg-void-800 overflow-x-auto;
+  }
+  .prose pre code {
+    @apply p-0 bg-transparent;
+  }
+
   /* Stretched link overlay */
   .stretched-link::after {
     content: '';
