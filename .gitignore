@@ -4,4 +4,5 @@ dist/
 .env
 .DS_Store
 .playwright-mcp/
-*.png
+/*.png
+!public/**
