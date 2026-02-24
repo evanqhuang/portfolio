@@ -20,10 +20,19 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl);
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script is:inline>
+      (function() {
+        var s = localStorage.getItem('theme');
+        if (s === 'dark') document.documentElement.classList.add('dark');
+        else if (s === 'light') document.documentElement.classList.add('light');
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
     <title>{title}</title>
     <meta name="description" content={description} />
