@@ -1,0 +1,257 @@
+@import "tailwindcss";
+
+@theme {
+  /* ============================================
+     Forge Color Palette
+     Dark foundation with molten amber accent
+     ============================================ */
+
+  /* Backgrounds - Obsidian */
+  --color-void-950: #060608;
+  --color-void-900: #0c0c10;
+  --color-void-850: #111116;
+  --color-void-800: #18181e;
+  --color-void-700: #222230;
+  --color-void-600: #33334a;
+
+  /* Text - Zinc/Ash */
+  --color-ash-50:  #fafafa;
+  --color-ash-100: #f0f0f2;
+  --color-ash-200: #dddde2;
+  --color-ash-300: #b0b0be;
+  --color-ash-400: #8888a0;
+  --color-ash-500: #5c5c72;
+
+  /* Primary Accent: Forge Amber */
+  --color-ember-700: #92400e;
+  --color-ember-600: #b45309;
+  --color-ember-500: #d97706;
+  --color-ember-400: #f59e0b;
+  --color-ember-300: #fbbf24;
+  --color-ember-200: #fde68a;
+  --color-ember-900: #1a120a;
+
+  /* Secondary: Oxidized Violet */
+  --color-oxide-600: #6d28d9;
+  --color-oxide-500: #7c3aed;
+  --color-oxide-400: #a78bfa;
+  --color-oxide-900: #140e24;
+
+  /* Status */
+  --color-live-500:  #10b981;
+  --color-fault-500: #ef4444;
+
+  /* Surface/Border */
+  --color-edge: #222230;
+  --color-edge-hover: #d97706;
+
+  /* Typography */
+  --font-sans: 'DM Sans', sans-serif;
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+/* ============================================
+   Base
+   ============================================ */
+
+body {
+  @apply bg-void-950 text-ash-300 font-sans antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html, body {
+  overflow-x: hidden;
+}
+
+/* ============================================
+   Text Utilities
+   ============================================ */
+
+.text-gradient {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(135deg, var(--color-ember-300), var(--color-ember-500));
+}
+
+.text-gradient-cool {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(135deg, var(--color-oxide-400), var(--color-ember-400));
+}
+
+/* ============================================
+   Monospaced label accents
+   ============================================ */
+
+.mono-label {
+  @apply font-mono text-xs tracking-widest uppercase;
+  color: var(--color-ash-500);
+}
+
+/* ============================================
+   Card & Component Utility Classes
+   ============================================ */
+
+@layer components {
+  .card {
+    background: var(--color-void-900);
+    border: 1px solid var(--color-void-700);
+  }
+
+  .card-hover {
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+  .card-hover:hover {
+    border-color: var(--color-ember-500);
+    box-shadow:
+      0 0 0 1px rgba(217,119,6,0.1),
+      0 8px 32px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(217,119,6,0.06);
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 font-semibold transition-all duration-200;
+    background: var(--color-ember-500);
+    color: var(--color-void-950);
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .btn-primary:hover {
+    background: var(--color-ember-400);
+    box-shadow: 0 0 24px rgba(217,119,6,0.4);
+  }
+  .btn-primary:active {
+    background: var(--color-ember-600);
+    transform: scale(0.98);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center px-5 py-2.5 font-medium transition-all duration-200;
+    background: transparent;
+    color: var(--color-ash-300);
+    border: 1px solid var(--color-void-700);
+    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+  }
+  .btn-ghost:hover {
+    color: var(--color-ember-400);
+    border-color: var(--color-ember-500);
+    background: rgba(217,119,6,0.05);
+  }
+
+  /* Filter Buttons */
+  .filter-btn-inactive {
+    @apply px-4 py-2 font-mono text-sm font-medium transition-all duration-200 cursor-pointer;
+    background: var(--color-void-900);
+    border: 1px solid var(--color-void-700);
+    color: var(--color-ash-400);
+  }
+  .filter-btn-inactive:hover {
+    border-color: var(--color-void-600);
+    color: var(--color-ash-200);
+  }
+
+  .filter-btn-active {
+    @apply px-4 py-2 font-mono text-sm font-medium transition-all duration-200 cursor-pointer;
+    background: var(--color-ember-900);
+    border: 1px solid var(--color-ember-500);
+    color: var(--color-ember-300);
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 text-xs font-mono font-medium;
+    background: var(--color-void-800);
+    border: 1px solid var(--color-void-600);
+    color: var(--color-ash-400);
+  }
+
+  .badge-accent {
+    background: var(--color-ember-900);
+    border-color: rgba(217,119,6,0.3);
+    color: var(--color-ember-300);
+  }
+
+  /* Grid dot pattern */
+  .dot-grid {
+    background-image: radial-gradient(circle, rgba(217,119,6,0.07) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Stretched link overlay */
+  .stretched-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  /* Crosshatch pattern */
+  .crosshatch {
+    background-image:
+      linear-gradient(45deg, rgba(217,119,6,0.03) 1px, transparent 1px),
+      linear-gradient(-45deg, rgba(217,119,6,0.03) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+}
+
+/* ============================================
+   Staggered entrance animations
+   ============================================ */
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out both;
+}
+
+/* ============================================
+   Accessibility
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ember-500);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Scrollbar
+   ============================================ */
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-void-950); }
+::-webkit-scrollbar-thumb { background: var(--color-void-700); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-void-600); }
+
+/* ============================================
+   Selection
+   ============================================ */
+
+::selection {
+  background: rgba(217,119,6,0.3);
+  color: var(--color-ash-50);
+}

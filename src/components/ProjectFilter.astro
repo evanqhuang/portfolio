@@ -1,0 +1,66 @@
+---
+const categories = [
+  { value: 'all', label: 'All' },
+  { value: 'embedded', label: 'Embedded' },
+  { value: 'web', label: 'Web' },
+  { value: 'devtools', label: 'Dev Tools' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'research', label: 'Research' },
+  { value: 'ai', label: 'AI' },
+  { value: 'infra', label: 'Infra' },
+];
+---
+
+<div class="flex flex-wrap items-center gap-2">
+  {categories.map((cat) => (
+    <button
+      class={`filter-btn ${cat.value === 'all' ? 'filter-btn-active' : 'filter-btn-inactive'}`}
+      data-category={cat.value}
+    >
+      {cat.label}
+    </button>
+  ))}
+</div>
+
+<script>
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const projectCards = document.querySelectorAll('.project-card');
+
+  function setActive(btn: Element) {
+    btn.classList.remove('filter-btn-inactive');
+    btn.classList.add('filter-btn-active');
+  }
+
+  function setInactive(btn: Element) {
+    btn.classList.remove('filter-btn-active');
+    btn.classList.add('filter-btn-inactive');
+  }
+
+  filterButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const category = button.getAttribute('data-category');
+
+      filterButtons.forEach((btn) => setInactive(btn));
+      setActive(button);
+
+      let visibleCount = 0;
+      projectCards.forEach((card) => {
+        const el = card as HTMLElement;
+        const cardCategory = el.dataset.category;
+        if (category === 'all' || cardCategory === category) {
+          el.style.display = '';
+          visibleCount++;
+        } else {
+          el.style.display = 'none';
+        }
+      });
+
+      const emptyState = document.getElementById('empty-state');
+      if (visibleCount === 0) {
+        emptyState?.classList.remove('hidden');
+      } else {
+        emptyState?.classList.add('hidden');
+      }
+    });
+  });
+</script>

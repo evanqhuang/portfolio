@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectFilter from '../components/ProjectFilter.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const projects = await getCollection('projects');
+const sorted = projects.sort((a, b) => {
+  if (a.data.order !== b.data.order) return a.data.order - b.data.order;
+  return a.data.title.localeCompare(b.data.title);
+});
+---
+
+<BaseLayout title="Evan Huang - Software Engineer">
+  <Hero />
+
+  <!-- Projects Section -->
+  <section id="projects" class="relative py-16 sm:py-24">
+    <div class="absolute inset-0 crosshatch opacity-40"></div>
+
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Section header -->
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+        <div>
+          <p class="mono-label mb-2">Selected Work</p>
+          <h2 class="text-3xl sm:text-4xl font-heading font-bold text-ash-100 tracking-tight">
+            Projects
+          </h2>
+        </div>
+        <ProjectFilter />
+      </div>
+
+      <!-- Divider -->
+      <div class="h-px bg-gradient-to-r from-ember-500/40 via-void-700 to-transparent mb-10"></div>
+
+      <!-- Project grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+        {sorted.map((project, i) => (
+          <div
+            class="project-card animate-fade-up"
+            data-category={project.data.category}
+            style={`animation-delay: ${0.05 * i}s;`}
+          >
+            <ProjectCard project={project} />
+          </div>
+        ))}
+      </div>
+
+      <!-- Empty state -->
+      <div id="empty-state" class="hidden text-center py-16">
+        <p class="text-ash-500 font-mono text-sm">No projects in this category.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
