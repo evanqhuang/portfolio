@@ -1,7 +1,7 @@
 ---
 title: "Camazotz Diving"
-description: "E-commerce site for custom 3D-printed cave diving gear, running entirely at the edge on Cloudflare Workers with D1 for order persistence. Features real-time PBR material manipulation on 3D product models, Stripe checkout with edge-native webhook verification, and Terraform-managed infrastructure."
-tech: ["Astro", "Tailwind CSS", "Cloudflare Workers", "D1", "Stripe", "WebGL", "Terraform"]
+description: "E-commerce site for my own line of custom cave diving gear — every product is designed from scratch in CAD and 3D-printed in ASA. Runs entirely at the edge on Cloudflare Workers with D1 for order persistence. Features real-time PBR material manipulation on 3D product models, Stripe checkout with edge-native webhook verification, and Terraform-managed infrastructure."
+tech: ["Astro", "Tailwind CSS", "Cloudflare Workers", "D1", "Stripe", "WebGL", "Terraform", "CAD"]
 category: web
 github: "https://github.com/evanqhuang/camazotz-site"
 url: "https://camazotzdiving.com"
@@ -10,7 +10,7 @@ order: 4
 image: "/images/projects/camazotz-site.png"
 ---
 
-Camazotz Diving sells custom 3D-printed equipment for underwater cave exploration. The site runs entirely on Cloudflare's edge network — Astro 5 in SSR mode on Workers, D1 (SQLite at the edge) for orders and inventory, and Stripe for payment processing. No origin server, no cold starts.
+Camazotz Diving is a company I started to design and sell custom equipment for underwater cave exploration. Every product — primary reels, safety spools, line markers — is designed from scratch in CAD and 3D-printed in ASA. The site runs entirely on Cloudflare's edge network — Astro 5 in SSR mode on Workers, D1 (SQLite at the edge) for orders and inventory, and Stripe for payment processing. No origin server, no cold starts.
 
 The 3D product viewer goes beyond displaying static models. It calls the `model-viewer` PBR material API directly — `setBaseColorFactor()` and `setEmissiveFactor()` — to update the GLTF model's metallic roughness properties in real time as customers select color options. Roughness is explicitly set to 0.9 to prevent unrealistic mirror reflections on color swaps. Each customer's color configuration is encoded as a compact string (`color:2,trim:0`) that flows through the cart, into Stripe session metadata, through the webhook, and into the D1 order_items table — validated server-side against a regex with duplicate part detection.
 
