@@ -1,7 +1,7 @@
 ---
 title: "Camazotz Diving"
-description: "E-commerce site for custom 3D-printed cave diving gear. Built with Astro 5 and deployed on Cloudflare Workers with D1 database. Features Stripe checkout, 3D product model viewer, blog with MDX, and Terraform-managed infrastructure."
-tech: ["Astro", "Tailwind CSS", "Cloudflare Workers", "D1", "Stripe", "Terraform"]
+description: "E-commerce site for custom 3D-printed cave diving gear, running entirely at the edge on Cloudflare Workers with D1 for order persistence. Features real-time PBR material manipulation on 3D product models, Stripe checkout with edge-native webhook verification, and Terraform-managed infrastructure."
+tech: ["Astro", "Tailwind CSS", "Cloudflare Workers", "D1", "Stripe", "WebGL", "Terraform"]
 category: web
 github: "https://github.com/evanqhuang/camazotz-site"
 url: "https://camazotzdiving.com"
@@ -10,8 +10,8 @@ order: 4
 image: "/images/projects/camazotz-site.png"
 ---
 
-Camazotz Diving sells custom 3D-printed equipment designed for underwater cave survey and exploration. The site needed to handle product browsing, 3D model preview, checkout, and a blog — all with zero cold starts and global edge latency.
+Camazotz Diving sells custom 3D-printed equipment for underwater cave exploration. The site runs entirely on Cloudflare's edge network — Astro 5 in SSR mode on Workers, D1 (SQLite at the edge) for orders and inventory, and Stripe for payment processing. No origin server, no cold starts.
 
-Astro 5 handles static generation for product pages and blog posts written in MDX. Cloudflare Workers serve the dynamic routes (cart, checkout sessions, order status) with D1 as the SQLite-compatible edge database for order and inventory state. Stripe handles payment processing with webhook-driven order confirmation.
+The 3D product viewer goes beyond displaying static models. It calls the `model-viewer` PBR material API directly — `setBaseColorFactor()` and `setEmissiveFactor()` — to update the GLTF model's metallic roughness properties in real time as customers select color options. Roughness is explicitly set to 0.9 to prevent unrealistic mirror reflections on color swaps. Each customer's color configuration is encoded as a compact string (`color:2,trim:0`) that flows through the cart, into Stripe session metadata, through the webhook, and into the D1 order_items table — validated server-side against a regex with duplicate part detection.
 
-The 3D model viewer lets customers inspect each product from any angle before purchasing, built with a lightweight WebGL renderer rather than a heavy framework dependency. Terraform manages the Cloudflare infrastructure — Workers, D1 bindings, DNS, and KV namespaces — so the entire deployment is reproducible from code.
+Stripe webhook verification uses `constructEventAsync` (the async variant required in Workers V8 isolates, since the sync version depends on Node.js crypto APIs). The webhook handler reads color configuration from two sources — per-line-item metadata is primary, with a session-level `cart_json` fallback for backward compatibility with older orders. Stripe's 500-character metadata limit is guarded with explicit truncation and warning logs. Terraform manages the full Cloudflare stack: Workers, D1 bindings, DNS, and KV namespaces.
