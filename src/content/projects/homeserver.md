@@ -1,12 +1,12 @@
 ---
 title: "Home Server"
-description: "Proxmox VE hypervisor managing purpose-built Linux VMs with GPU passthrough for ML inference and training. OpenZFS with RAIDZ2 for two-disk fault tolerance and snapshot-based backups. Runs fine-tuned LLMs (Qwen, Mistral), diffusion models (SDXL with LoRA adapters), and self-hosted services via Docker Compose and Ansible."
+description: "A home server built to run local AI models, self-hosted services, and redundant storage — all managed as code. Hosts fine-tuned language models and image generation locally, eliminating dependence on cloud APIs and keeping all data on-premises. Provisioned and maintained through Ansible and Proxmox's API rather than manual configuration."
 tech: ["Proxmox", "Linux", "Docker", "OpenZFS", "Ansible", "SDXL", "Qwen", "Mistral"]
 category: infra
 featured: false
 order: 12
 ---
 
-The home server runs Proxmox VE as a bare-metal hypervisor, managing a fleet of Linux VMs purpose-built for different workloads. GPU passthrough enables dedicated instances for ML inference and training — currently running fine-tuned Qwen and Mistral models for text generation and Stable Diffusion XL with custom LoRA adapters for image generation.
+Running models locally is cheaper and more private than hitting cloud APIs, but it needs enough hardware to be worthwhile and enough discipline to stay maintainable. The server runs Proxmox VE as a bare-metal hypervisor, with separate Linux VMs for different workload categories. GPU passthrough gives the inference VM direct access to the GPU without sharing it through a hypervisor layer — currently running fine-tuned Qwen and Mistral models for text generation and Stable Diffusion XL with custom LoRA adapters for image synthesis.
 
-Storage is backed by OpenZFS with RAIDZ2 for two-disk fault tolerance, automatic scrubs, and snapshot-based backups. Self-hosted services run in Docker Compose stacks across VMs — media servers, monitoring, DNS, and development environments — all managed through Proxmox's API and Ansible playbooks for reproducible provisioning.
+Storage uses OpenZFS with RAIDZ2, which tolerates two simultaneous disk failures, with automatic integrity scrubs and snapshot-based backups. Self-hosted services — media servers, monitoring, DNS, and development environments — run in Docker Compose stacks distributed across VMs. The entire configuration is managed through Ansible playbooks and Proxmox's API so any VM can be reprovisioned from scratch without manual steps.

@@ -1,6 +1,6 @@
 ---
 title: "FinFeed"
-description: "Live fish tank stream from a Raspberry Pi to any browser. OpenCV captures raw frames and pipes them directly to FFmpeg's stdin for HLS encoding. Segments are pushed to the server via authenticated HTTP PUT — the same pattern used by professional streaming encoders — with hls.js handling playback and full error recovery."
+description: "Streams a live fish tank camera from a Raspberry Pi to any browser with no cloud streaming service in between. The camera feeds directly into a video encoder, which pushes segments to a server over HTTP — the same delivery pattern used by professional encoders — and hls.js handles playback and error recovery on the browser side."
 tech: ["Python", "OpenCV", "FFmpeg", "TypeScript", "Express", "Raspberry Pi", "HLS"]
 category: web
 github: "https://github.com/evanqhuang/finfeed"
@@ -8,8 +8,8 @@ featured: false
 order: 14
 ---
 
-FinFeed streams a live fish tank feed from a Raspberry Pi camera to any browser over HLS. The video pipeline is tighter than most hobby streaming setups: OpenCV captures raw BGR24 frames from the camera and writes them directly to FFmpeg's stdin as raw bytes, bypassing any intermediate encoding step for maximum throughput from sensor to encoder.
+FinFeed streams a live fish tank feed from a Raspberry Pi to any browser using HLS — the same adaptive streaming protocol used by most video platforms. The pipeline: camera captures raw frames, OpenCV passes them directly to FFmpeg's stdin as raw bytes, FFmpeg encodes them into short video segments, and those segments get delivered to the browser.
 
-The interesting architectural choice is how segments reach the server. Rather than writing to a shared filesystem (which would require the Pi and server to share a mount), FFmpeg pushes each `.ts` segment and `.m3u8` manifest to the Express server via authenticated HTTP PUT requests — the same delivery pattern used by professional streaming encoders like OBS pushing to Wowza. The Express server accepts uploads on an auth-protected route (Basic Auth), serves the HLS files publicly with correct MIME types, and runs a cleanup interval that deletes segments older than 5 minutes to prevent unbounded disk growth.
+The non-obvious decision is how the segments travel from the Pi to the server. One natural approach would be writing them to a shared filesystem that both machines can read — but that requires a network mount and tight coupling between the two. Instead, FFmpeg pushes each segment and manifest file to the Express server via authenticated HTTP PUT requests, which is the same delivery pattern used by professional streaming encoders when pushing to streaming platforms. The server accepts those uploads on a protected route, serves the HLS files publicly with the correct MIME types, and runs a cleanup interval to delete segments older than 5 minutes so disk usage stays bounded.
 
-The browser client uses hls.js with a full error recovery strategy: network errors trigger `startLoad()` retries, media errors trigger `recoverMediaError()` codec resets, and fatal errors destroy and reinitialize the player. Native HLS (Safari) falls back to direct `video.src` assignment. The UI has a fish tank aesthetic with randomized CSS bubble animations.
+Browser playback uses hls.js with a layered error recovery strategy: transient network errors trigger load retries, media decode errors trigger codec resets, and unrecoverable errors tear down and reinitialize the player entirely. Safari, which supports HLS natively, skips hls.js and plays directly. The UI has a fish tank aesthetic with randomized CSS bubble animations rising up the page.

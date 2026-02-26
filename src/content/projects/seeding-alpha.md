@@ -1,6 +1,6 @@
 ---
 title: "SeedingAlpha"
-description: "Quantitative research platform studying media piracy economics using 61.5 million torrent records spanning 19 years. DuckDB star schema for OLAP analytics, FastText classifier bootstrapped via weak supervision from ~1k labels to 50k+, and cross-correlation analysis against entertainment sector equities."
+description: "Applies the 'alternative data' approach used by quantitative hedge funds — satellite photos of parking lots, credit card transaction feeds — to 61.5 million torrent records spanning 19 years. Uses public piracy metadata as a demand proxy for the entertainment industry, then correlates activity against sector equities like Disney, Netflix, and EA."
 tech: ["Python", "DuckDB", "FastText", "Data Analysis"]
 category: finance
 github: "https://github.com/evanqhuang/SeedingAlpha"
@@ -8,10 +8,8 @@ featured: false
 order: 10
 ---
 
-SeedingAlpha treats public torrent metadata as alternative data for studying the economics of media piracy — the same category of signal (demand proxies from unconventional sources) that quantitative funds use with satellite imagery or credit card transaction data.
+Quantitative funds have used satellite photos of parking lots to estimate retail foot traffic, and credit card transaction feeds to predict earnings before they're announced. Alternative data is any unconventional signal that reflects economic activity before it shows up in official reports. SeedingAlpha applies that same framing to public torrent metadata: 61.5 million torrents, 710 million files, and 19 years of history (2004-2023) representing 123 TB of content — a granular record of global entertainment demand going back to the early internet.
 
-The dataset is substantial: 61.5 million torrents, 710 million files, 19 years of history (2004-2023), representing 123 TB of content. A DuckDB ETL pipeline loads this into a dimensional star schema (`DIM_CONTENT` + `FACT_TORRENT_ACTIVITY`) designed for analytical queries — DuckDB's columnar engine makes this tractable on a single machine against Parquet files, no server required.
+The dataset is loaded into a DuckDB star schema and queried against Parquet files, making it tractable on a single machine without standing up a data warehouse. The bigger challenge is classification: torrent names are informal and inconsistent — release group tags, quality strings, codec identifiers, and episode numbering conventions all mixed together. A FastText classifier is bootstrapped from roughly 1,000 hand-labeled examples using regex-based labeling rules to expand training coverage to 50k+ samples, with a priority hierarchy that resolves cases where multiple rules match. The title normalizer that feeds into it achieves tested 90% accuracy across movie, TV, game, and software categories.
 
-Content classification uses FastText with a weak supervision bootstrapping pipeline. Starting from roughly 1,000 hand-labeled examples, regex-based labeling rules (`S\d{1,2}E\d{1,2}` → TV, platform keywords → game, year+quality patterns → movie) expand coverage to 50k+ training samples with a priority hierarchy that resolves ambiguity. A title normalizer handles the idiosyncrasies of torrent naming conventions — episode patterns, quality tags, codec identifiers, release groups — with a tested 90% accuracy rate.
-
-The financial integration joins torrent activity metrics with stock data for entertainment companies (DIS, NFLX, WBD, PARA, EA) to run cross-correlation and lead/lag analysis, with SPY as a market control factor.
+The financial layer joins torrent activity metrics against stock prices for entertainment companies (DIS, NFLX, WBD, PARA, EA) to run cross-correlation and lead/lag analysis, using SPY as a market control. I wanted to find out whether piracy volume predicts or follows changes in these companies' valuations.

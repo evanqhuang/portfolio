@@ -1,6 +1,6 @@
 ---
 title: "Resume Generator"
-description: "Full-stack resume system with a Go backend (Cobra CLI + Chi HTTP server), React frontend with drag-and-drop section reordering, and XeLaTeX PDF compilation. LaTeX templates are compiled into the binary via go:embed. Includes AI-powered job matching through OpenRouter and a preset system for role-specific variants."
+description: "Editing a resume in a word processor means fighting formatting on every change and duplicating content for different roles. This system stores resume content as structured data and generates perfectly formatted PDFs on demand, with a web UI for drag-and-drop customization, role-specific presets, and AI-powered job matching to highlight the most relevant experience."
 tech: ["Go", "React", "LaTeX", "YAML", "OpenRouter", "DnD Kit"]
 category: web
 github: "https://github.com/evanqhuang/resume"
@@ -8,8 +8,8 @@ featured: false
 order: 15
 ---
 
-Maintaining a resume in a word processor means fighting formatting on every edit and duplicating content for different role targets. This system stores resume content in a YAML master file and renders it through a LaTeX template, with a web UI for interactive customization.
+The content of a resume — work history, projects, skills — barely changes, but the formatting breaks on every edit and tailoring for a specific role means duplicating the whole document. This system separates content from presentation: resume entries live in a YAML master file, a LaTeX template handles typography and layout, and a Go backend generates a PDF on demand.
 
-The Go backend embeds the LaTeX template at compile time via `//go:embed` — the binary ships with zero runtime file dependencies. The PDF pipeline runs XeLaTeX twice per generation (required for proper cross-references), with a fallback chain checking 8 known installation paths across macOS and Linux TeX distributions. LaTeX special characters (12 total, including `→` → `$\rightarrow$`) are escaped correctly.
+All experience and project entries are stored once in YAML and never duplicated. The Go backend embeds the LaTeX template at compile time so the binary has zero runtime file dependencies. The PDF pipeline runs XeLaTeX twice per generation (required for correct cross-references), with a fallback chain covering 8 known installation paths across macOS and Linux TeX distributions.
 
-The web frontend uses React with `@dnd-kit` for drag-and-drop section and entry reordering. Ordering state is stored as deltas — only deviations from defaults are persisted in `order.yaml`, keeping the file minimal. An AI job matching feature sends resume content to OpenRouter and returns per-item relevance scores; long-running analysis is modeled as async jobs with a mutex-protected registry and 10-minute TTL cleanup. Presets save named snapshots of the full ordering and selection state for quickly switching between role-targeted versions.
+A React UI with drag-and-drop lets you reorder sections and entries, toggle items in or out, and see changes reflected in a generated PDF. Ordering changes are stored as deltas — only deviations from the default order are persisted — so the data file stays minimal. Presets save named snapshots of a full ordering and selection state for quickly switching between role-targeted versions. The job matching feature sends resume content to a language model via OpenRouter and returns relevance scores per entry, surfacing which experience to lead with for a given job description. Long-running analyses are modeled as async jobs with a cleanup interval so the server doesn't accumulate stale state.
