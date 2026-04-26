@@ -41,6 +41,7 @@ const ogImageURL = image
 
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content="Evan Huang" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -59,6 +60,20 @@ const ogImageURL = image
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageURL} />
+
+    <!-- Schema.org Person structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Evan Huang",
+      "url": "https://evanqhuang.com",
+      "jobTitle": "Software Engineer",
+      "description": "Building underwater cave mapping devices, quantitative trading systems, and tools for developers. From bare-metal embedded to full-stack web.",
+      "sameAs": [
+        "https://github.com/evanqhuang",
+        "https://www.linkedin.com/in/evanqhuang/"
+      ]
+    })} />
 
     <!-- Fonts: DM Sans (body), Space Grotesk (headings), IBM Plex Mono (code) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
