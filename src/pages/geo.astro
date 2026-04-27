@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import type { IndexFile } from '../lib/geo-types';
+
+const INDEX_URL =
+  'https://raw.githubusercontent.com/evanqhuang/geo-daemon/main/data/runs/index.json';
+
+let data: IndexFile | null = null;
+try {
+  const res = await fetch(INDEX_URL);
+  if (res.ok) data = await res.json();
+} catch {
+  data = null;
+}
+
+const fmt = (n: number) => `${(n * 100).toFixed(0)}%`;
+
+const sortedCitations = data
+  ? Object.entries(data.citations)
+      .sort(([, a], [, b]) => b.count - a.count)
+      .slice(0, 15)
+  : [];
+---
+
+<BaseLayout title="GEO Experiment - Evan Huang" description="Tracking my visibility in AI-generated answers across ChatGPT, Claude, Gemini, and Google AI Overviews.">
+  <section class="max-w-4xl mx-auto px-4 py-16">
+    <p class="font-mono text-xs text-ash-500 tracking-widest uppercase mb-2">Live Experiment</p>
+    <h1 class="text-4xl font-heading font-bold text-ash-50 mb-4">GEO</h1>
+    <p class="text-ash-400 max-w-xl mb-12">
+      Weekly cron queries four AI search engines with a fixed prompt set.
+      Each result is parsed for whether "Evan Huang" is mentioned.
+      Source: <a class="text-ember-400 hover:underline" href="https://github.com/evanqhuang/geo-daemon">github.com/evanqhuang/geo-daemon</a>.
+    </p>
+
+    {data === null && (
+      <p class="text-ash-500 font-mono text-sm">No data yet — first run pending.</p>
+    )}
+
+    {data && (
+      <>
+        <div class="rounded-lg border border-void-700 bg-void-900 p-6 mb-8">
+          <p class="font-mono text-xs text-ash-500 uppercase tracking-widest mb-1">Share of Model</p>
+          <p class="text-5xl font-heading font-bold text-ember-400">{fmt(data.summary.share_of_model)}</p>
+          <p class="text-xs text-ash-600 mt-1">last updated {data.last_updated.slice(0, 10)}</p>
+        </div>
+
+        <h2 class="text-xl font-heading font-bold text-ash-100 mt-12 mb-4">By Engine</h2>
+        <canvas id="byEngine" height="120"></canvas>
+
+        <h2 class="text-xl font-heading font-bold text-ash-100 mt-12 mb-4">Over Time</h2>
+        <canvas id="timeseries" height="160"></canvas>
+
+        <h2 class="text-xl font-heading font-bold text-ash-100 mt-12 mb-4">Top Citation Sources</h2>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-ash-500 text-left border-b border-void-700">
+              <th class="py-2 pr-4">URL</th>
+              <th class="py-2 text-right">Citations</th>
+              <th class="py-2 text-right pl-4">Owned</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedCitations.map(([url, stat]) => (
+              <tr class="border-b border-void-800">
+                <td class="py-2 pr-4 truncate max-w-md">
+                  <a class="text-ash-300 hover:text-ember-400 transition-colors" href={url}>{url}</a>
+                </td>
+                <td class="py-2 text-right text-ash-300">{stat.count}</td>
+                <td class="py-2 text-right pl-4">{stat.is_owned ? <span class="text-ember-400">✓</span> : ''}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <script type="module" define:vars={{ data }}>
+          import Chart from 'chart.js/auto';
+
+          const EMBER = '#f97316';
+          const GRID = 'rgba(255,255,255,0.06)';
+          const LABEL = '#9ca3af';
+
+          const axisDefaults = {
+            grid: { color: GRID },
+            ticks: { color: LABEL, font: { family: 'monospace', size: 11 } },
+          };
+
+          const byEngineLabels = Object.keys(data.summary.share_of_model_by_engine);
+          const byEngineValues = byEngineLabels.map(k => data.summary.share_of_model_by_engine[k]);
+          new Chart(document.getElementById('byEngine'), {
+            type: 'bar',
+            data: {
+              labels: byEngineLabels,
+              datasets: [{ data: byEngineValues, backgroundColor: EMBER, borderRadius: 4 }],
+            },
+            options: {
+              indexAxis: 'y',
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { ...axisDefaults, min: 0, max: 1, ticks: { ...axisDefaults.ticks, callback: v => (v * 100).toFixed(0) + '%' } },
+                y: axisDefaults,
+              },
+            },
+          });
+
+          new Chart(document.getElementById('timeseries'), {
+            type: 'line',
+            data: {
+              labels: data.timeseries.map(p => p.run_id.slice(0, 10)),
+              datasets: [{
+                data: data.timeseries.map(p => p.share_of_model),
+                borderColor: EMBER,
+                backgroundColor: 'rgba(249,115,22,0.1)',
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: EMBER,
+              }],
+            },
+            options: {
+              plugins: { legend: { display: false } },
+              scales: {
+                x: axisDefaults,
+                y: { ...axisDefaults, min: 0, max: 1, ticks: { ...axisDefaults.ticks, callback: v => (v * 100).toFixed(0) + '%' } },
+              },
+            },
+          });
+        </script>
+      </>
+    )}
+  </section>
+</BaseLayout>
