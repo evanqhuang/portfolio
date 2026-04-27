@@ -45,10 +45,16 @@ const sortedCitations = data
         </div>
 
         <h2 class="text-xl font-heading font-bold text-ash-100 mt-12 mb-4">By Engine</h2>
-        <canvas id="byEngine" height="120"></canvas>
+        <canvas id="byEngine" height="120"
+          data-labels={JSON.stringify(Object.keys(data.summary.share_of_model_by_engine))}
+          data-values={JSON.stringify(Object.values(data.summary.share_of_model_by_engine))}
+        ></canvas>
 
         <h2 class="text-xl font-heading font-bold text-ash-100 mt-12 mb-4">Over Time</h2>
-        <canvas id="timeseries" height="160"></canvas>
+        <canvas id="timeseries" height="160"
+          data-labels={JSON.stringify(data.timeseries.map(p => p.run_id.slice(0, 10)))}
+          data-values={JSON.stringify(data.timeseries.map(p => p.share_of_model))}
+        ></canvas>
 
         <h2 class="text-xl font-heading font-bold text-ash-100 mt-12 mb-4">Top Citation Sources</h2>
         <table class="w-full text-sm">
@@ -72,7 +78,7 @@ const sortedCitations = data
           </tbody>
         </table>
 
-        <script type="module" define:vars={{ data }}>
+        <script>
           import Chart from 'chart.js/auto';
 
           const EMBER = '#f97316';
@@ -84,30 +90,34 @@ const sortedCitations = data
             ticks: { color: LABEL, font: { family: 'monospace', size: 11 } },
           };
 
-          const byEngineLabels = Object.keys(data.summary.share_of_model_by_engine);
-          const byEngineValues = byEngineLabels.map(k => data.summary.share_of_model_by_engine[k]);
-          new Chart(document.getElementById('byEngine'), {
+          const beEl = document.getElementById('byEngine') as HTMLCanvasElement;
+          const beLabels = JSON.parse(beEl.dataset.labels!);
+          const beValues = JSON.parse(beEl.dataset.values!);
+          new Chart(beEl, {
             type: 'bar',
             data: {
-              labels: byEngineLabels,
-              datasets: [{ data: byEngineValues, backgroundColor: EMBER, borderRadius: 4 }],
+              labels: beLabels,
+              datasets: [{ data: beValues, backgroundColor: EMBER, borderRadius: 4 }],
             },
             options: {
               indexAxis: 'y',
               plugins: { legend: { display: false } },
               scales: {
-                x: { ...axisDefaults, min: 0, max: 1, ticks: { ...axisDefaults.ticks, callback: v => (v * 100).toFixed(0) + '%' } },
+                x: { ...axisDefaults, min: 0, max: 1, ticks: { ...axisDefaults.ticks, callback: (v: number) => (v * 100).toFixed(0) + '%' } },
                 y: axisDefaults,
               },
             },
           });
 
-          new Chart(document.getElementById('timeseries'), {
+          const tsEl = document.getElementById('timeseries') as HTMLCanvasElement;
+          const tsLabels = JSON.parse(tsEl.dataset.labels!);
+          const tsValues = JSON.parse(tsEl.dataset.values!);
+          new Chart(tsEl, {
             type: 'line',
             data: {
-              labels: data.timeseries.map(p => p.run_id.slice(0, 10)),
+              labels: tsLabels,
               datasets: [{
-                data: data.timeseries.map(p => p.share_of_model),
+                data: tsValues,
                 borderColor: EMBER,
                 backgroundColor: 'rgba(249,115,22,0.1)',
                 fill: true,
@@ -119,7 +129,7 @@ const sortedCitations = data
               plugins: { legend: { display: false } },
               scales: {
                 x: axisDefaults,
-                y: { ...axisDefaults, min: 0, max: 1, ticks: { ...axisDefaults.ticks, callback: v => (v * 100).toFixed(0) + '%' } },
+                y: { ...axisDefaults, min: 0, max: 1, ticks: { ...axisDefaults.ticks, callback: (v: number) => (v * 100).toFixed(0) + '%' } },
               },
             },
           });
