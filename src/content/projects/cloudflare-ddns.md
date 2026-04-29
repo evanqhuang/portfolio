@@ -8,7 +8,7 @@ featured: false
 order: 13
 ---
 
-Home servers on residential internet connections get a different public IP every time the router reconnects. Domain names that pointed to the old IP silently break — and you only find out when something stops working. This daemon polls the current public IP on a regular interval and updates the Cloudflare DNS record whenever it changes.
+Every router reconnect brings a new public IP. Domain names that pointed to the old one silently break — and you only find out when something stops working. This daemon polls the current public IP at a regular interval and updates the Cloudflare DNS record whenever it changes.
 
 The tricky edge case is VPN detection. If Cloudflare Warp is active on the host, the IP the daemon detects as "public" is actually a Cloudflare egress address — writing that to DNS would point the domain at Cloudflare's network rather than the home server. The daemon fetches and caches the official Cloudflare IP range list, refreshed every 24 hours, and checks the detected IP against those ranges before deciding whether to update. If the IP is a known Cloudflare address, the update is skipped.
 
