@@ -11,18 +11,14 @@
   </div>
 
   <!-- Corner coordinates -->
-  <div
-    class="absolute top-6 left-6 font-mono text-[10px] text-void-600 hidden lg:block"
-  >
+  <div class="absolute top-6 left-6 text-mono-coord hidden lg:block">
     <span>00.00</span>
   </div>
-  <div
-    class="absolute top-6 right-6 font-mono text-[10px] text-void-600 hidden lg:block"
-  >
+  <div class="absolute top-6 right-6 text-mono-coord hidden lg:block">
     <span>evanqhuang.com</span>
   </div>
 
-  <div class="relative max-w-4xl mx-auto px-4 pt-24 pb-20 sm:pt-32 sm:pb-28">
+  <div class="relative max-w-4xl mx-auto px-4 pt-[clamp(5rem,8vw,9rem)] pb-[clamp(4rem,6vw,7rem)]">
     <!-- Mono label -->
     <p class="mono-label mb-6 animate-fade-up" style="animation-delay: 0.1s;">
       Software Engineer
@@ -30,7 +26,7 @@
 
     <!-- Name -->
     <h1
-      class="text-5xl sm:text-6xl lg:text-7xl font-heading font-bold tracking-tight animate-fade-up"
+      class="heading-display text-balance animate-fade-up"
       style="animation-delay: 0.2s;"
     >
       <span class="text-ash-50">Evan</span>
@@ -39,7 +35,7 @@
 
     <!-- Tagline -->
     <p
-      class="text-lg sm:text-xl text-ash-400 mt-6 max-w-xl leading-relaxed animate-fade-up"
+      class="text-body-lg text-ash-400 mt-6 max-w-[60ch] leading-body text-pretty animate-fade-up"
       style="animation-delay: 0.35s;"
     >
       Building underwater cave mapping devices, quantitative trading systems,
@@ -74,9 +70,7 @@
     >
       <div class="w-px h-8 bg-gradient-to-b from-ember-500/60 to-transparent">
       </div>
-      <span class="font-mono text-[10px] text-ash-500 tracking-widest uppercase"
-        >Scroll</span
-      >
+      <span class="text-mono-coord">Scroll</span>
     </div>
   </div>
 </section>

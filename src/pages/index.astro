@@ -16,7 +16,7 @@ const sorted = projects.sort((a, b) => {
   <Hero />
 
   <!-- Projects Section -->
-  <section id="projects" class="relative py-16 sm:py-24">
+  <section id="projects" class="relative py-[var(--spacing-section)] scroll-mt-20">
     <div class="absolute inset-0 crosshatch opacity-40"></div>
 
     <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -24,7 +24,7 @@ const sorted = projects.sort((a, b) => {
       <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
         <div>
           <p class="mono-label mb-2">Selected Work</p>
-          <h2 class="text-3xl sm:text-4xl font-heading font-bold text-ash-100 tracking-tight">
+          <h2 class="heading-section text-ash-100 text-balance">
             Projects
           </h2>
         </div>
@@ -32,7 +32,7 @@ const sorted = projects.sort((a, b) => {
       </div>
 
       <!-- Divider -->
-      <div class="h-px bg-gradient-to-r from-ember-500/40 via-void-700 to-transparent mb-10"></div>
+      <div class="divider-rule mb-10"></div>
 
       <!-- Project grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">

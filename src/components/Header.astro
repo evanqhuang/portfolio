@@ -2,7 +2,7 @@
 import ThemeToggle from './ThemeToggle.astro';
 ---
 
-<header class="sticky top-0 z-50 border-b border-void-700 bg-void-950/90 backdrop-blur-lg">
+<header class="sticky top-0 z-50 border-b border-void-700 bg-void-950/90 backdrop-blur-lg transition-[backdrop-filter,background-color] duration-300">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-14">
       <!-- Name / Home -->
@@ -10,7 +10,7 @@ import ThemeToggle from './ThemeToggle.astro';
         <span class="font-heading font-bold text-lg text-ash-100 group-hover:text-ember-400 transition-colors">
           E.Huang
         </span>
-        <span class="hidden sm:inline font-mono text-[10px] text-ash-500 tracking-widest">//</span>
+        <span class="hidden sm:inline text-mono-coord">//</span>
       </a>
 
       <!-- Desktop Nav -->

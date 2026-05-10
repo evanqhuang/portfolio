@@ -49,6 +49,32 @@
   --font-sans: 'DM Sans', sans-serif;
   --font-heading: 'Space Grotesk', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
+
+  /* Type scale — fluid clamp() */
+  --text-display:    clamp(3rem,     2rem + 4.5vw,    5.25rem);  /* 48 → 84 px */
+  --text-h1:         clamp(2.25rem,  1.5rem + 3vw,    3.5rem);   /* 36 → 56 px */
+  --text-h2:         clamp(1.75rem,  1.25rem + 2vw,   2.5rem);   /* 28 → 40 px */
+  --text-h3:         clamp(1.125rem, 1rem + 0.5vw,    1.375rem); /* 18 → 22 px */
+  --text-h4:         clamp(1rem,     0.95rem + 0.2vw, 1.125rem); /* 16 → 18 px */
+  --text-body-lg:    clamp(1.0625rem, 1rem + 0.3vw,   1.25rem);  /* 17 → 20 px */
+  --text-body-sm:    0.875rem;                                    /* 14 px */
+  --text-mono-label: 0.6875rem;                                   /* 11 px */
+
+  /* Leading — unique names so we don't override Tailwind defaults */
+  --leading-display: 0.95;
+  --leading-heading: 1.05;
+  --leading-body:    1.6;
+  --leading-prose:   1.7;
+  --leading-mono:    1;
+
+  /* Tracking — unique names */
+  --tracking-display: -0.025em;
+  --tracking-heading: -0.015em;
+  --tracking-mono:    0.18em;
+  --tracking-coord:   0.08em;
+
+  /* Section rhythm */
+  --spacing-section: clamp(4rem, 6vw, 6rem);
 }
 
 /* ============================================
@@ -192,12 +218,82 @@ html, body {
 }
 
 /* ============================================
+   Heading utilities — fluid type scale
+   ============================================ */
+
+.heading-display {
+  @apply font-heading font-bold;
+  font-size: var(--text-display);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.heading-page {
+  @apply font-heading font-bold;
+  font-size: var(--text-h1);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+}
+
+.heading-section {
+  @apply font-heading font-bold;
+  font-size: var(--text-h2);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+}
+
+.heading-card {
+  @apply font-heading font-semibold;
+  font-size: var(--text-h3);
+  line-height: 1.2;
+  letter-spacing: var(--tracking-heading);
+}
+
+/* ============================================
    Monospaced label accents
    ============================================ */
 
-.mono-label {
-  @apply font-mono text-xs tracking-widest uppercase;
+.mono-label,
+.section-label {
+  @apply font-mono uppercase;
+  font-size: var(--text-mono-label);
+  line-height: var(--leading-mono);
+  letter-spacing: var(--tracking-mono);
   color: var(--text-subtle);
+}
+
+.text-mono-coord {
+  @apply font-mono uppercase;
+  font-size: var(--text-mono-label);
+  line-height: var(--leading-mono);
+  letter-spacing: var(--tracking-coord);
+  color: var(--text-subtle);
+}
+
+.prose-bounded {
+  max-width: 68ch;
+}
+
+/* Skip-to-content link — visible only when focused */
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  padding: 0.5rem 0.75rem;
+  background: var(--accent-primary);
+  color: var(--surface-base);
+  font-family: var(--font-mono);
+  font-size: var(--text-body-sm);
+  text-decoration: none;
+  transform: translateY(-150%);
+  transition: transform 0.2s ease;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid var(--accent-border);
+  outline-offset: 2px;
 }
 
 /* ============================================
@@ -292,7 +388,7 @@ html, body {
   /* Prose - markdown body content */
   .prose {
     color: var(--text-secondary);
-    @apply leading-relaxed;
+    line-height: var(--leading-prose);
   }
   .prose p {
     @apply mb-4;
@@ -303,9 +399,10 @@ html, body {
   .prose h2, .prose h3 {
     color: var(--text-heading);
     @apply font-heading font-semibold mt-8 mb-3;
+    letter-spacing: var(--tracking-heading);
   }
-  .prose h2 { @apply text-xl; }
-  .prose h3 { @apply text-lg; }
+  .prose h2 { font-size: var(--text-body-lg); }
+  .prose h3 { font-size: var(--text-h4); }
   .prose a {
     color: var(--accent-primary-hover);
     @apply hover:text-ember-300 underline underline-offset-2 transition-colors;
@@ -364,6 +461,39 @@ html, body {
 
   .card-hover:hover .project-image img {
     transform: scale(1.04);
+  }
+
+  .divider-rule {
+    height: 1px;
+    background-image: linear-gradient(
+      to right,
+      rgba(var(--accent-glow-rgb), 0.4),
+      var(--surface-border) 30%,
+      transparent
+    );
+  }
+}
+
+/* ============================================
+   Project card filter transitions
+   ============================================ */
+
+.project-card {
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    display 0.25s allow-discrete;
+}
+.project-card[data-hidden="true"] {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  display: none;
+}
+/* Re-entry from data-hidden — fade and rise back in */
+@starting-style {
+  .project-card:not([data-hidden="true"]) {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
   }
 }
 
@@ -516,6 +646,7 @@ html.light .card-hover:hover {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }

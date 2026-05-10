@@ -11,11 +11,12 @@ const categories = [
 ];
 ---
 
-<div class="flex flex-wrap items-center gap-2">
+<div class="flex flex-wrap items-center gap-2" role="toolbar" aria-label="Filter projects by category">
   {categories.map((cat) => (
     <button
       class={`filter-btn ${cat.value === 'all' ? 'filter-btn-active' : 'filter-btn-inactive'}`}
       data-category={cat.value}
+      aria-pressed={cat.value === 'all' ? 'true' : 'false'}
     >
       {cat.label}
     </button>
@@ -26,14 +27,27 @@ const categories = [
   const filterButtons = document.querySelectorAll('.filter-btn');
   const projectCards = document.querySelectorAll('.project-card');
 
+  // Release the entrance keyframe hold so filter transitions can take over.
+  // animate-fade-up has fill-mode: both, which would otherwise pin opacity/transform
+  // and shadow the .project-card[data-hidden] rule.
+  projectCards.forEach((card) => {
+    card.addEventListener(
+      'animationend',
+      () => card.classList.remove('animate-fade-up'),
+      { once: true }
+    );
+  });
+
   function setActive(btn: Element) {
     btn.classList.remove('filter-btn-inactive');
     btn.classList.add('filter-btn-active');
+    btn.setAttribute('aria-pressed', 'true');
   }
 
   function setInactive(btn: Element) {
     btn.classList.remove('filter-btn-active');
     btn.classList.add('filter-btn-inactive');
+    btn.setAttribute('aria-pressed', 'false');
   }
 
   filterButtons.forEach((button) => {
@@ -48,10 +62,10 @@ const categories = [
         const el = card as HTMLElement;
         const cardCategory = el.dataset.category;
         if (category === 'all' || cardCategory === category) {
-          el.style.display = '';
+          delete el.dataset.hidden;
           visibleCount++;
         } else {
-          el.style.display = 'none';
+          el.dataset.hidden = 'true';
         }
       });
 

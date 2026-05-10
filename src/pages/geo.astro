@@ -23,10 +23,10 @@ const sortedCitations = data
 ---
 
 <BaseLayout title="GEO Experiment - Evan Huang" description="Tracking my visibility in AI-generated answers across ChatGPT, Claude, Gemini, and Google AI Overviews.">
-  <section class="max-w-4xl mx-auto px-4 py-16">
-    <p class="font-mono text-xs text-ash-500 tracking-widest uppercase mb-2">Live Experiment</p>
-    <h1 class="text-4xl font-heading font-bold text-ash-50 mb-4">GEO</h1>
-    <p class="text-ash-400 max-w-xl mb-12">
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-[var(--spacing-section)]">
+    <p class="section-label mb-2">Live Experiment</p>
+    <h1 class="heading-page text-ash-100 text-balance mb-4">GEO</h1>
+    <p class="text-body-lg text-ash-400 leading-body text-pretty max-w-[60ch] mb-12">
       Weekly cron queries four AI search engines with a fixed prompt set.
       Each result is parsed for whether "Evan Huang" is mentioned.
       Source: <a class="text-ember-400 hover:underline" href="https://github.com/evanqhuang/geo-daemon">github.com/evanqhuang/geo-daemon</a>.
@@ -38,56 +38,80 @@ const sortedCitations = data
 
     {data && (
       <>
-        <div class="rounded-lg border border-void-700 bg-void-900 p-6 mb-8">
-          <p class="font-mono text-xs text-ash-500 uppercase tracking-widest mb-1">Share of Model</p>
-          <p class="text-5xl font-heading font-bold text-ember-400">{fmt(data.summary.share_of_model)}</p>
-          <p class="text-xs text-ash-600 mt-1">last updated {data.last_updated.slice(0, 10)}</p>
+        <!-- Headline stat -->
+        <div class="card rounded-sm p-8 mb-12 relative overflow-hidden">
+          <div class="absolute inset-0 dot-grid opacity-50"></div>
+          <div class="relative">
+            <p class="section-label mb-3">Share of Model</p>
+            <p class="heading-display text-ember-400">{fmt(data.summary.share_of_model)}</p>
+            <p class="text-mono-coord mt-3">last_updated: {data.last_updated.slice(0, 10)}</p>
+          </div>
         </div>
 
-        <h2 class="text-xl font-heading font-bold text-ash-100 mt-12 mb-4">By Engine</h2>
-        <canvas id="byEngine" height="120"
-          data-labels={JSON.stringify(Object.keys(data.summary.share_of_model_by_engine))}
-          data-values={JSON.stringify(Object.values(data.summary.share_of_model_by_engine))}
-        ></canvas>
+        <!-- By engine -->
+        <div class="mt-12 mb-6">
+          <p class="section-label mb-1">Breakdown</p>
+          <h2 class="heading-card text-ash-100">By Engine</h2>
+        </div>
+        <div class="card rounded-sm p-6 mb-12">
+          <canvas id="byEngine" height="120"
+            data-labels={JSON.stringify(Object.keys(data.summary.share_of_model_by_engine))}
+            data-values={JSON.stringify(Object.values(data.summary.share_of_model_by_engine))}
+          ></canvas>
+        </div>
 
-        <h2 class="text-xl font-heading font-bold text-ash-100 mt-12 mb-4">Over Time</h2>
-        <canvas id="timeseries" height="160"
-          data-labels={JSON.stringify(data.timeseries.map(p => p.run_id.slice(0, 10)))}
-          data-values={JSON.stringify(data.timeseries.map(p => p.share_of_model))}
-        ></canvas>
+        <!-- Time series -->
+        <div class="mt-12 mb-6">
+          <p class="section-label mb-1">Trend</p>
+          <h2 class="heading-card text-ash-100">Over Time</h2>
+        </div>
+        <div class="card rounded-sm p-6 mb-12">
+          <canvas id="timeseries" height="160"
+            data-labels={JSON.stringify(data.timeseries.map(p => p.run_id.slice(0, 10)))}
+            data-values={JSON.stringify(data.timeseries.map(p => p.share_of_model))}
+          ></canvas>
+        </div>
 
-        <h2 class="text-xl font-heading font-bold text-ash-100 mt-12 mb-4">Top Citation Sources</h2>
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="text-ash-500 text-left border-b border-void-700">
-              <th class="py-2 pr-4">URL</th>
-              <th class="py-2 text-right">Citations</th>
-              <th class="py-2 text-right pl-4">Owned</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedCitations.map(([url, stat]) => (
-              <tr class="border-b border-void-800">
-                <td class="py-2 pr-4 truncate max-w-md">
-                  <a class="text-ash-300 hover:text-ember-400 transition-colors" href={url}>{url}</a>
-                </td>
-                <td class="py-2 text-right text-ash-300">{stat.count}</td>
-                <td class="py-2 text-right pl-4">{stat.is_owned ? <span class="text-ember-400">✓</span> : ''}</td>
+        <!-- Citations -->
+        <div class="mt-12 mb-6">
+          <p class="section-label mb-1">Sources</p>
+          <h2 class="heading-card text-ash-100">Top Citation Sources</h2>
+        </div>
+        <div class="card rounded-sm p-6 overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-ash-500 text-left border-b border-[var(--surface-border)]">
+                <th class="py-2 pr-4 font-mono text-xs uppercase tracking-widest">URL</th>
+                <th class="py-2 text-right font-mono text-xs uppercase tracking-widest">Citations</th>
+                <th class="py-2 text-right pl-4 font-mono text-xs uppercase tracking-widest">Owned</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {sortedCitations.map(([url, stat]) => (
+                <tr class="border-b border-[var(--surface-border)] last:border-0">
+                  <td class="py-2 pr-4 truncate max-w-md">
+                    <a class="text-ash-300 hover:text-ember-400 transition-colors" href={url}>{url}</a>
+                  </td>
+                  <td class="py-2 text-right text-ash-300 font-mono">{stat.count}</td>
+                  <td class="py-2 text-right pl-4">{stat.is_owned ? <span class="text-ember-400">✓</span> : ''}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         <script>
           import Chart from 'chart.js/auto';
 
-          const EMBER = '#f97316';
-          const GRID = 'rgba(255,255,255,0.06)';
-          const LABEL = '#9ca3af';
+          const css = getComputedStyle(document.documentElement);
+          const EMBER = css.getPropertyValue('--accent-primary-hover').trim() || '#d97706';
+          const EMBER_GLOW_RGB = css.getPropertyValue('--accent-glow-rgb').trim() || '217, 119, 6';
+          const GRID = css.getPropertyValue('--surface-border').trim() || 'rgba(255,255,255,0.06)';
+          const LABEL = css.getPropertyValue('--text-muted').trim() || '#9ca3af';
 
           const axisDefaults = {
             grid: { color: GRID },
-            ticks: { color: LABEL, font: { family: 'monospace', size: 11 } },
+            ticks: { color: LABEL, font: { family: 'IBM Plex Mono, monospace', size: 11 } },
           };
 
           const beEl = document.getElementById('byEngine') as HTMLCanvasElement;
@@ -119,7 +143,7 @@ const sortedCitations = data
               datasets: [{
                 data: tsValues,
                 borderColor: EMBER,
-                backgroundColor: 'rgba(249,115,22,0.1)',
+                backgroundColor: `rgba(${EMBER_GLOW_RGB}, 0.1)`,
                 fill: true,
                 tension: 0.3,
                 pointBackgroundColor: EMBER,
